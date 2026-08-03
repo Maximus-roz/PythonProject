@@ -1,28 +1,48 @@
-from masks import get_mask_card_number
-from masks import get_mask_account
+from masks import get_mask_card_number, get_mask_account
 
-def mask_account_card(account_number):
+def mask_account_card(account_number=""):
+    if not account_number:  # Проверка на пустую строку
+        return "Аргумент не передан"
     account_number_spl = account_number.split()
-    account_number_int = ""
-    account_number_str = ""
-    for number in account_number_spl:
+    account_number_int = None
+    account_number_str = []
+    substring_counter = 0
+    for number in account_number_spl:    # разделение на строковые и цифровые значения
         if number.isdigit():
             account_number_int = number
-        elif number.isalpha():
-            account_number_str = number
+            substring_counter += 1
+        else:
+            account_number_str.append(number)
+            substring_counter += 1
+
+    if substring_counter > 3: # защита от большего чем 2 количества подстрок
+        return account_number
+
+
+
+    account_number_str_join =" ".join(account_number_str)
 
     if len(account_number_int) == 20:
         result = get_mask_account(account_number_int)
-        print(f"{account_number_str} {result}")
-        return f"{account_number_str} {result}"
+        print(f"{account_number_str_join} {result}")
+        return f"{account_number_str_join} {result}"
+
 
 
     elif len(account_number_int) == 16:
         result = get_mask_card_number(account_number_int)
-        return f"{account_number_str} {result}"
+        print(f"{account_number_str_join} {result}")
+        return f"{account_number_str_join} {result}"
 
-1234567812345678
-123456
+    else:
+        return account_number
+
+
+
+
+
+mask_account_card()
+
 
 
 
