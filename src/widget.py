@@ -34,5 +34,9 @@ def mask_account_card(account_number=""):
     else:
         return account_number
 
+from datetime import datetime
+def get_date(iso_string):   # преобразуем ISO-формат в формат ДД.ММ.ГГГГ
+    date_new = datetime.fromisoformat(iso_string)
+    return date_new.strftime("%d.%m.%Y")
 
-mask_account_card()
+
