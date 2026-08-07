@@ -23,20 +23,19 @@ def mask_account_card(account_number=""):
 
     if len(account_number_int) == 20:
         result = get_mask_account(account_number_int)
-        print(f"{account_number_str_join} {result}")
         return f"{account_number_str_join} {result}"
 
     elif len(account_number_int) == 16:
         result = get_mask_card_number(account_number_int)
-        print(f"{account_number_str_join} {result}")
         return f"{account_number_str_join} {result}"
 
     else:
         return account_number
 
+
 from datetime import datetime
-def get_date(iso_string):   # преобразуем ISO-формат в формат ДД.ММ.ГГГГ
+
+
+def get_date(iso_string):  # преобразуем ISO-формат в формат ДД.ММ.ГГГГ
     date_new = datetime.fromisoformat(iso_string)
     return date_new.strftime("%d.%m.%Y")
-
-
