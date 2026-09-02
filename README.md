@@ -36,7 +36,7 @@ date
 ## 🚀 Быстрый старт (Installation & Run)
 
 ### Требования
-- Python 3.8+
+- Python 3.8+ 
 
 
 ### Установка
