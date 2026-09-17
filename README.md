@@ -40,7 +40,7 @@ date
 
 
 ### Установка
-```bash
+
 git clone https://github.com/Maximus-roz/PythonProject.git
-cd repo
-npm install
+cd src
+pip install
