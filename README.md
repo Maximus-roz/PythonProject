@@ -43,4 +43,5 @@ date
 
 git clone https://github.com/Maximus-roz/PythonProject.git
 cd src
-pip install
+pip install -r requirements.txt
+processing.py
