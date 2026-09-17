@@ -1,6 +1,9 @@
+from typing import List, Dict, Any, Optional
+
+
 def filter_by_state(
-    data_list: list[dict[str, any]], state: str = "EXECUTED"
-) -> list[dict[str, any]]:
+    data_list: list[dict[str, Any]], state: str = "EXECUTED"
+) -> list[dict[str, Any]]:
     """
     Фильтрует список словарей по значению ключа 'state'.
     """
@@ -12,8 +15,8 @@ def filter_by_state(
 
 
 def sort_by_date(
-    data_list: list[dict[str, any]], descending=True
-) -> list[dict[str, any]]:
+    data_list: list[dict[str, Any]], descending=True
+) -> list[dict[str, Any]]:
     """
     Сортирует список словарей по ключу 'date'.
     """
