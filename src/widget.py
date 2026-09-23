@@ -1,8 +1,9 @@
-from masks import get_mask_card_number, get_mask_account
+from src.masks import get_mask_card_number, get_mask_account
 
 
 def mask_account_card(account_number=""):
     if not account_number:  # Проверка на пустую строку
+        raise ValueError("Аргумент не передан")
         return "Аргумент не передан"
     account_number_spl = account_number.split()
     account_number_int = None
@@ -19,6 +20,9 @@ def mask_account_card(account_number=""):
     if substring_counter > 3:  # защита от большего чем 2 количества подстрок
         return account_number
 
+    if account_number_int is None:
+        raise ValueError("Номер карты или счёта не найден")
+
     account_number_str_join = " ".join(account_number_str)
 
     if len(account_number_int) == 20:
@@ -30,6 +34,7 @@ def mask_account_card(account_number=""):
         return f"{account_number_str_join} {result}"
 
     else:
+        raise ValueError("Некорректная длина номера")
         return account_number
 
 
