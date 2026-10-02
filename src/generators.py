@@ -13,4 +13,11 @@ def transaction_descriptions(transactions):
         yield x.get("description", "")
 
 
+def card_number_generator(start, end):
+    for number in range(start, end+1):
+        raw = f"{number:016d}"
+        formatted = " ".join(raw[i:i+4] for i in range(0, len(raw), 4))
+        yield formatted
+
+
 
