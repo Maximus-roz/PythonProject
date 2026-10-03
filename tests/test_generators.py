@@ -1,7 +1,10 @@
-import pytest
 import json
-from src.generators import filter_by_currency, transaction_descriptions, card_number_generator
 from pathlib import Path
+
+import pytest
+
+from src.generators import (card_number_generator, filter_by_currency,
+                            transaction_descriptions)
 
 
 @pytest.mark.parametrize(
@@ -16,6 +19,7 @@ from pathlib import Path
 def test_filter_by_currency_parametrized(transactions, currency, expected_ids):
     result = list(filter_by_currency(transactions, currency))
     assert [tx["id"] for tx in result] == expected_ids
+
 
 path = Path(__file__).parent.parent / "transactions.txt"
 with path.open("r", encoding="utf-8") as file:
@@ -99,9 +103,11 @@ def test_transaction_descriptions_returns_all_descriptions(transactions):
     ]
     assert list(transaction_descriptions(transactions)) == expected
 
+
 def test_transaction_descriptions_empty_list():
     """Проверяет работу функции с пустым списком."""
     assert list(transaction_descriptions([])) == []
+
 
 def test_single_number():
     """Тест генерации одного номера"""
@@ -122,7 +128,7 @@ def test_small_range():
         "0000 0000 0000 0002",
         "0000 0000 0000 0003",
         "0000 0000 0000 0004",
-        "0000 0000 0000 0005"
+        "0000 0000 0000 0005",
     ]
 
     assert result == expected
