@@ -1,6 +1,6 @@
 import pytest
-
 from src.decorators import log
+
 
 def test_log_to_console_success(capsys):
     """Успешное выполнение функции логируется в консоль."""
@@ -41,7 +41,10 @@ def test_log_to_console_error_with_kwargs(capsys):
         divide(x=5, y=0)
 
     captured = capsys.readouterr()
-    assert captured.out == "divide error: ZeroDivisionError. Inputs: (), {'x': 5, 'y': 0}\n"
+    assert (
+        captured.out
+        == "divide error: ZeroDivisionError. Inputs: (), {'x': 5, 'y': 0}\n"
+    )
 
     def test_log_to_file_success(tmp_path):
         """Успешное выполнение функции логируется в файл."""
