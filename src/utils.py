@@ -56,7 +56,7 @@ def get_transaction_amount(transaction: dict[str, Any]) -> float:
 
 from pathlib import Path
 
-from src.utils import load_transactions, get_transaction_amount
+from src.utils import get_transaction_amount, load_transactions
 
 if __name__ == "__main__":
     file_path = Path(__file__).resolve().parent.parent / "data" / "operations.json"
@@ -65,4 +65,3 @@ if __name__ == "__main__":
     for tx in transactions:
         print(get_transaction_amount(tx))
     print(f"Загружено транзакций: {len(transactions)}")
-
