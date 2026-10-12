@@ -1,9 +1,9 @@
 import json
-from typing import Any
 import logging
-from src.external_api import convert_to_rub
 from pathlib import Path
+from typing import Any
 
+from src.external_api import convert_to_rub
 
 # Настройка логирования
 LOG_DIR = Path(__file__).resolve().parent.parent / "logs"
@@ -54,9 +54,7 @@ def load_transactions(path: str) -> list[dict[str, Any]]:
         )
         return []
 
-    logger.info(
-        "Успешно загружено %d транзакций из файла %s", len(data), path
-    )
+    logger.info("Успешно загружено %d транзакций из файла %s", len(data), path)
     return data
 
 
@@ -84,16 +82,12 @@ def get_transaction_amount(transaction: dict[str, Any]) -> float:
     amount = operation_amount.get("amount", 0)
     currency = operation_amount.get("currency", {}).get("code", "RUB")
 
-    logger.debug(
-        "Извлечены данные: amount=%s, currency=%s", amount, currency
-    )
+    logger.debug("Извлечены данные: amount=%s, currency=%s", amount, currency)
 
     try:
         amount = float(amount)
     except (TypeError, ValueError) as e:
-        logger.error(
-            "Некорректное значение суммы '%s' в транзакции: %s", amount, e
-        )
+        logger.error("Некорректное значение суммы '%s' в транзакции: %s", amount, e)
         return 0.0
 
     if currency == "RUB":
@@ -111,9 +105,7 @@ def get_transaction_amount(transaction: dict[str, Any]) -> float:
             )
             return result
         except Exception as e:
-            logger.error(
-                "Ошибка конвертации %.2f %s в RUB: %s", amount, currency, e
-            )
+            logger.error("Ошибка конвертации %.2f %s в RUB: %s", amount, currency, e)
             return 0.0
 
     logger.warning(
@@ -135,6 +127,4 @@ if __name__ == "__main__":
         print(amount)
 
     print(f"Загружено транзакций: {len(transactions)}")
-    logger.info(
-        "Программа завершена. Обработано транзакций: %d", len(transactions)
-    )
+    logger.info("Программа завершена. Обработано транзакций: %d", len(transactions))
