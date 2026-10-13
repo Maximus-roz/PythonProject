@@ -3,7 +3,6 @@ from unittest.mock import patch
 
 import pandas as pd
 import pytest
-
 from src.load_transactions_from_excel import load_transactions
 
 
@@ -106,8 +105,8 @@ class TestLoadTransactions:
                 "description": ["test1", "test2"],
             }
         )
-        # Сохраняем с теми же колонками, что и в names, без header
-        expected.to_excel(file_path, index=False, header=False)
+
+        expected.to_excel(file_path, index=False)
 
         # Act
         result = load_transactions(file_path)

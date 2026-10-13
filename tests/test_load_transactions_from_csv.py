@@ -3,7 +3,6 @@ from unittest.mock import patch
 
 import pandas as pd
 import pytest
-
 from src.load_transactions_from_csv import load_transactions
 
 
