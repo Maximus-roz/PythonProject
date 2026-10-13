@@ -1,4 +1,5 @@
 from src.masks import get_mask_account, get_mask_card_number
+from datetime import datetime
 
 
 def mask_account_card(account_number=""):
@@ -36,9 +37,6 @@ def mask_account_card(account_number=""):
     else:
         raise ValueError("Некорректная длина номера")
         return account_number
-
-
-from datetime import datetime
 
 
 def get_date(iso_string):  # преобразуем ISO-формат в формат ДД.ММ.ГГГГ

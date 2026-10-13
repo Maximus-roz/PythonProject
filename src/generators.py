@@ -1,6 +1,6 @@
-import json
 from pathlib import Path
 import pandas as pd
+
 
 def filter_by_currency(transactions, currency):
     """Фильтрует транзакции по коду валюты.
@@ -10,12 +10,9 @@ def filter_by_currency(transactions, currency):
     :return: DataFrame с отфильтрованными транзакциями.
     """
 
-    transactions_filtered = transactions.loc[transactions["currency_code"] == currency]
-    return transactions_filtered
-
-    # for x in transactions:
-    #     if x["operationAmount"]["currency"]["code"] == currency:
-    #         yield x
+    for x in transactions:
+        if x["operationAmount"]["currency"]["code"] == currency:
+            yield x
 
 
 def transaction_descriptions(transactions):
@@ -47,18 +44,28 @@ def card_number_generator(start, end):
         formatted = " ".join(raw[i : i + 4] for i in range(0, len(raw), 4))
         yield formatted
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     path = Path(__file__).parent.parent / "data" / "transactions.csv"
     currency = "USD"
     df = pd.read_csv(
-        path, sep=";",
-        names=["id", "state", "date", "amount", "currency_name",
-               "currency_code", "from", "to", "description"],
+        path,
+        sep=";",
+        names=[
+            "id",
+            "state",
+            "date",
+            "amount",
+            "currency_name",
+            "currency_code",
+            "from",
+            "to",
+            "description",
+        ],
         header=0,
     ).dropna(how="all")
     result = filter_by_currency(df, currency)
     print(result)
-
 
     # result = get_survived(df)
     # print(result)
