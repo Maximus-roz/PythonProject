@@ -3,7 +3,7 @@ from pathlib import Path
 import pandas as pd
 
 
-def load_transactions(path: Path) -> pd.DataFrame:
+def load_transactions(path: Path) -> list[dict]:
     df = pd.read_csv(
         path,
         sep=";",
@@ -20,7 +20,7 @@ def load_transactions(path: Path) -> pd.DataFrame:
         ],
         header=0,
     ).dropna(how="all")
-    return df
+    return df.to_dict(orient="records")
 
 
 if __name__ == "__main__":
