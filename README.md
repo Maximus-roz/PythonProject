@@ -53,6 +53,10 @@ X — цифра номера карты. Генератор может сген
 ## Функция convert_to_rub
 конвертирует сумму из указанной валюты в рубли
 
+## Функция load_transactions_from_csv и load_transactions_from_excel
+Функции считывают финансовые операции из CSV и EXCEL соответственно.
+
+
 ## 🚀 Быстрый старт (Installation & Run)
 
 ### Требования
@@ -73,5 +77,7 @@ generators.py
 decorators.py
 external_api.py
 utils.py
+load_transactions_from_csv.py
+load_transactions_from_excel.py
 
 в папке tests содержатся модули для тестирования проекта
