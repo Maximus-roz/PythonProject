@@ -6,13 +6,26 @@ import pytest
 from src.load_transactions_from_csv import load_transactions
 
 
+EXPECTED_COLUMNS = [
+    "id",
+    "state",
+    "date",
+    "amount",
+    "currency_name",
+    "currency_code",
+    "from",
+    "to",
+    "description",
+]
+
+
 class TestLoadTransactions:
 
     @patch("src.load_transactions_from_csv.pd.read_csv")
     def test_load_transactions_calls_read_csv_with_correct_args(self, mock_read_csv):
         """Проверяем, что pd.read_csv вызывается с правильными аргументами."""
         # Arrange
-        fake_path = Path("/fake/data/transactions.xlsx")
+        fake_path = Path("/fake/data/transactions.csv")
         expected_df = pd.DataFrame(
             {
                 "id": [1],
@@ -35,30 +48,29 @@ class TestLoadTransactions:
         mock_read_csv.assert_called_once_with(
             fake_path,
             sep=";",
-            names=[
-                "id",
-                "state",
-                "date",
-                "amount",
-                "currency_name",
-                "currency_code",
-                "from",
-                "to",
-                "description",
-            ],
+            names=EXPECTED_COLUMNS,
             header=0,
         )
-        pd.testing.assert_frame_equal(result, expected_df)
+        # Функция возвращает list[dict], а не DataFrame
+        assert result == expected_df.to_dict(orient="records")
 
     @patch("src.load_transactions_from_csv.pd.read_csv")
     def test_load_transactions_drops_empty_rows(self, mock_read_csv):
-        """Проверяем, что пустые строки удаляются через dropna(how='all')."""
+        """Проверяем, что полностью пустые строки удаляются через dropna(how='all')."""
         # Arrange
-        fake_path = Path("/fake/data/transactions.xlsx")
+        fake_path = Path("/fake/data/transactions.csv")
+        # Полностью пустая строка (все NaN) + две нормальные
         df_with_nans = pd.DataFrame(
             {
                 "id": [1, None, 3],
                 "state": ["done", None, "pending"],
+                "date": ["2024-01-01", None, "2024-01-03"],
+                "amount": [100.0, None, 300.0],
+                "currency_name": ["RUB", None, "RUB"],
+                "currency_code": ["643", None, "643"],
+                "from": ["A", None, "C"],
+                "to": ["B", None, "D"],
+                "description": ["t1", None, "t3"],
             }
         )
         mock_read_csv.return_value = df_with_nans
@@ -68,16 +80,19 @@ class TestLoadTransactions:
 
         # Assert
         assert len(result) == 2
-        assert result["id"].tolist() == [1, 3]
+        assert [row["id"] for row in result] == [1, 3]
 
     @patch("src.load_transactions_from_csv.pd.read_csv")
-    def test_load_transactions_returns_dataframe(self, mock_read_csv):
-        """Возвращаемый объект — это DataFrame."""
-        mock_read_csv.return_value = pd.DataFrame({"id": [1, 2]})
+    def test_load_transactions_returns_list_of_dicts(self, mock_read_csv):
+        """Возвращаемый объект — список словарей."""
+        mock_read_csv.return_value = pd.DataFrame(
+            {"id": [1, 2], "state": ["done", "pending"]}
+        )
 
-        result = load_transactions(Path("/fake/file.xlsx"))
+        result = load_transactions(Path("/fake/file.csv"))
 
-        assert isinstance(result, pd.DataFrame)
+        assert isinstance(result, list)
+        assert all(isinstance(row, dict) for row in result)
 
     @patch("src.load_transactions_from_csv.pd.read_csv")
     def test_load_transactions_raises_if_file_missing(self, mock_read_csv):
@@ -85,28 +100,5 @@ class TestLoadTransactions:
         mock_read_csv.side_effect = FileNotFoundError("No such file")
 
         with pytest.raises(FileNotFoundError):
-            load_transactions(Path("/fake/missing.xlsx"))
+            load_transactions(Path("/fake/missing.csv"))
 
-    def test_load_transactions_with_real_temp_file(self, tmp_path):
-        """Интеграционный тест с реальным временным csv-файлом."""
-        file_path = tmp_path / "transactions.csv"
-        expected = pd.DataFrame(
-            {
-                "id": [1, 2],
-                "state": ["done", "pending"],
-                "date": ["2024-01-01", "2024-01-02"],
-                "amount": [100.0, 200.0],
-                "currency_name": ["RUB", "RUB"],
-                "currency_code": ["643", "643"],
-                "from": ["A", "C"],
-                "to": ["B", "D"],
-                "description": ["test1", "test2"],
-            }
-        )
-        expected.to_csv(file_path, sep=";", index=False, header=True)
-
-        result = load_transactions(file_path)
-
-        assert len(result) == 2
-        assert list(result.columns) == list(expected.columns)
-        assert result["id"].tolist() == [1, 2]

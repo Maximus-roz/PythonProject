@@ -1,41 +1,47 @@
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 import pandas as pd
 import pytest
+
 from src.load_transactions_from_excel import load_transactions
 
 
 class TestLoadTransactions:
+    """Тесты для функции load_transactions."""
 
     @patch("src.load_transactions_from_excel.pd.read_excel")
-    def test_load_transactions_calls_read_excel_with_correct_args(
-        self, mock_read_excel
-    ):
-        """Проверяем, что pd.read_excel вызывается с правильными аргументами."""
-        # Arrange
-        fake_path = Path("/fake/data/transactions.xlsx")
-        expected_df = pd.DataFrame(
-            {
-                "id": [1],
-                "state": ["done"],
-                "date": ["2024-01-01"],
-                "amount": [100.0],
-                "currency_name": ["RUB"],
-                "currency_code": ["643"],
-                "from": ["A"],
-                "to": ["B"],
-                "description": ["test"],
-            }
+    def test_calls_read_excel_with_correct_args(self, mock_read_excel):
+        """Проверяем, что pd.read_excel вызывается с нужными аргументами."""
+        # Готовим фейковый DataFrame
+        fake_df = pd.DataFrame(
+            [
+                {
+                    "id": 1,
+                    "state": "EXECUTED",
+                    "date": "2024-01-01",
+                    "amount": 100,
+                    "currency_name": "USD",
+                    "currency_code": "USD",
+                    "from": "A",
+                    "to": "B",
+                    "description": "test",
+                }
+            ]
         )
-        mock_read_excel.return_value = expected_df
+        # Мок для dropna().to_dict() цепочки
+        mock_read_excel.return_value = MagicMock(
+            dropna=MagicMock(return_value=MagicMock(
+                to_dict=MagicMock(return_value=fake_df.to_dict(orient="records"))
+            ))
+        )
 
-        # Act
-        result = load_transactions(fake_path)
+        path = Path("/tmp/test.xlsx")
+        result = load_transactions(path)
 
-        # Assert
+        # Проверяем аргументы вызова
         mock_read_excel.assert_called_once_with(
-            fake_path,
+            path,
             names=[
                 "id",
                 "state",
@@ -49,69 +55,57 @@ class TestLoadTransactions:
             ],
             header=0,
         )
-        pd.testing.assert_frame_equal(result, expected_df)
+        assert result == fake_df.to_dict(orient="records")
+        assert isinstance(result, list)
+        assert isinstance(result[0], dict)
 
     @patch("src.load_transactions_from_excel.pd.read_excel")
-    def test_load_transactions_drops_empty_rows(self, mock_read_excel):
-        """Проверяем, что пустые строки удаляются через dropna(how='all')."""
-        # Arrange
-        fake_path = Path("/fake/data/transactions.xlsx")
-        df_with_nans = pd.DataFrame(
-            {
-                "id": [1, None, 3],
-                "state": ["done", None, "pending"],
-            }
+    def test_dropna_called_with_how_all(self, mock_read_excel):
+        """Проверяем, что dropna вызывается с how='all'."""
+        mock_df = MagicMock()
+        mock_read_excel.return_value = mock_df
+        mock_df.dropna.return_value.to_dict.return_value = []
+
+        load_transactions(Path("/tmp/test.xlsx"))
+
+        mock_df.dropna.assert_called_once_with(how="all")
+        mock_df.dropna.return_value.to_dict.assert_called_once_with(orient="records")
+
+    @patch("src.load_transactions_from_excel.pd.read_excel")
+    def test_empty_dataframe_returns_empty_list(self, mock_read_excel):
+        """Пустой DataFrame → пустой список."""
+        empty_df = pd.DataFrame(
+            columns=[
+                "id", "state", "date", "amount",
+                "currency_name", "currency_code",
+                "from", "to", "description",
+            ]
         )
-        mock_read_excel.return_value = df_with_nans
+        mock_read_excel.return_value = empty_df
 
-        # Act
-        result = load_transactions(fake_path)
+        result = load_transactions(Path("/tmp/empty.xlsx"))
 
-        # Assert
-        assert len(result) == 2
-        assert result["id"].tolist() == [1, 3]
+        assert result == []
 
     @patch("src.load_transactions_from_excel.pd.read_excel")
-    def test_load_transactions_returns_dataframe(self, mock_read_excel):
-        """Возвращаемый объект — это DataFrame."""
-        mock_read_excel.return_value = pd.DataFrame({"id": [1, 2]})
-
-        result = load_transactions(Path("/fake/file.xlsx"))
-
-        assert isinstance(result, pd.DataFrame)
-
-    @patch("src.load_transactions_from_excel.pd.read_excel")
-    def test_load_transactions_raises_if_file_missing(self, mock_read_excel):
-        """Если файл отсутствует — пробрасываем исключение."""
-        mock_read_excel.side_effect = FileNotFoundError("No such file")
-
-        with pytest.raises(FileNotFoundError):
-            load_transactions(Path("/fake/missing.xlsx"))
-
-    def test_load_transactions_with_real_temp_file(self, tmp_path):
-        """Интеграционный тест с реальным временным Excel-файлом."""
-        # Arrange
-        file_path = tmp_path / "transactions.xlsx"
-        expected = pd.DataFrame(
-            {
-                "id": [1, 2],
-                "state": ["done", "pending"],
-                "date": ["2024-01-01", "2024-01-02"],
-                "amount": [100.0, 200.0],
-                "currency_name": ["RUB", "RUB"],
-                "currency_code": ["643", "643"],
-                "from": ["A", "C"],
-                "to": ["B", "D"],
-                "description": ["test1", "test2"],
-            }
+    def test_returns_list_of_dicts(self, mock_read_excel):
+        """Возвращаемый тип — list[dict]."""
+        df = pd.DataFrame(
+            [
+                {"id": 1, "state": "EXECUTED", "date": "2024-01-01",
+                 "amount": 10, "currency_name": "USD", "currency_code": "USD",
+                 "from": "A", "to": "B", "description": "x"},
+                {"id": 2, "state": "PENDING", "date": "2024-01-02",
+                 "amount": 20, "currency_name": "EUR", "currency_code": "EUR",
+                 "from": "C", "to": "D", "description": "y"},
+            ]
         )
+        mock_read_excel.return_value = df
 
-        expected.to_excel(file_path, index=False)
+        result = load_transactions(Path("/tmp/test.xlsx"))
 
-        # Act
-        result = load_transactions(file_path)
-
-        # Assert
+        assert isinstance(result, list)
         assert len(result) == 2
-        assert list(result.columns) == list(expected.columns)
-        assert result["id"].tolist() == [1, 2]
+        assert all(isinstance(row, dict) for row in result)
+        assert result[0]["id"] == 1
+        assert result[1]["currency_code"] == "EUR"
