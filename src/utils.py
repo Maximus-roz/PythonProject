@@ -3,6 +3,8 @@ import logging
 from pathlib import Path
 from typing import Any
 
+
+
 from src.external_api import convert_to_rub
 
 # Настройка логирования

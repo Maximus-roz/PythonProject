@@ -373,6 +373,18 @@ files = [
 toml = ["tomli ; python_full_version <= \"3.11.0a6\""]
 
 [[package]]
+name = "enc"
+version = "0.1.0"
+description = ""
+optional = false
+python-versions = ">=3.9,<4.0"
+groups = ["main"]
+files = [
+    {file = "enc-0.1.0-py3-none-any.whl", hash = "sha256:a0f57fe7259fd2212129226ec845fbb301ab9d8e8d2fa5330f6081087afc9b41"},
+    {file = "enc-0.1.0.tar.gz", hash = "sha256:dc526b62e0c70908a8dd19a0a6e874a5886c17eeab134f6261b259a85088d430"},
+]
+
+[[package]]
 name = "flake8"
 version = "7.3.0"
 description = "the modular source code checker: pep8 pyflakes and co"
@@ -1093,4 +1105,4 @@ zstd = ["backports-zstd (>=1.0.0) ; python_version < \"3.14\""]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.14"
-content-hash = "90143a18760c99d9d447f2c10b8dbfb1632671d4005f21dec4729f8414634e5b"
+content-hash = "5ecbd3707b2a56ecaf576ab6d533c2e69493c1c109b2cc0ceed72b3c682b9f32"
