@@ -1,10 +1,11 @@
 import re
-
 from pathlib import Path
+
 from src.utils import load_transactions
 
-def process_bank_search(operations:list[dict], search_data:str)->list[dict]:
-    """Возвращает список словарей, у которых в описании есть строка поиска. """
+
+def process_bank_search(operations: list[dict], search_data: str) -> list[dict]:
+    """Возвращает список словарей, у которых в описании есть строка поиска."""
     if not search_data:
         return operations
 
@@ -22,6 +23,7 @@ def process_bank_search(operations:list[dict], search_data:str)->list[dict]:
             result.append(op)
 
     return result
+
 
 if __name__ == "__main__":
     file_path = Path(__file__).resolve().parent.parent

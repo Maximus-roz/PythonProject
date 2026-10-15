@@ -1,4 +1,3 @@
-import json
 from unittest.mock import patch
 
 import pytest
@@ -49,7 +48,9 @@ def test_choice_json(mock_exists, mock_input, mock_load, sample_operations, caps
 @patch("src.main.load_transactions")
 @patch("builtins.input", side_effect=["2", "EXECUTED", "нет", "нет", "нет"])
 @patch("pathlib.Path.exists", return_value=True)
-def test_choice_csv(mock_exists, mock_input, mock_load_json, mock_load_csv, sample_operations):
+def test_choice_csv(
+    mock_exists, mock_input, mock_load_json, mock_load_csv, sample_operations
+):
     mock_load_csv.return_value = sample_operations
     main()
     mock_load_csv.assert_called_once()
@@ -62,8 +63,14 @@ def test_choice_csv(mock_exists, mock_input, mock_load_json, mock_load_csv, samp
 @patch("src.main.load_transactions")
 @patch("builtins.input", side_effect=["3", "EXECUTED", "нет", "нет", "нет"])
 @patch("pathlib.Path.exists", return_value=True)
-def test_choice_excel(mock_exists, mock_input, mock_load_json, mock_load_csv, mock_load_excel,
-                      sample_operations):
+def test_choice_excel(
+    mock_exists,
+    mock_input,
+    mock_load_json,
+    mock_load_csv,
+    mock_load_excel,
+    sample_operations,
+):
     mock_load_excel.return_value = sample_operations
     main()
     mock_load_excel.assert_called_once()
@@ -86,9 +93,13 @@ def test_invalid_status(mock_exists, mock_input, mock_load, sample_operations, c
 # 5. Сортировка по убыванию -> descending=True
 @patch("src.main.sort_by_date")
 @patch("src.main.load_transactions")
-@patch("builtins.input", side_effect=["1", "EXECUTED", "да", "по убыванию", "нет", "нет"])
+@patch(
+    "builtins.input", side_effect=["1", "EXECUTED", "да", "по убыванию", "нет", "нет"]
+)
 @patch("pathlib.Path.exists", return_value=True)
-def test_sort_descending(mock_exists, mock_input, mock_load, mock_sort, sample_operations):
+def test_sort_descending(
+    mock_exists, mock_input, mock_load, mock_sort, sample_operations
+):
     mock_load.return_value = sample_operations
     mock_sort.return_value = sample_operations
     main()
@@ -99,9 +110,14 @@ def test_sort_descending(mock_exists, mock_input, mock_load, mock_sort, sample_o
 # 6. Сортировка по возрастанию -> descending=False
 @patch("src.main.sort_by_date")
 @patch("src.main.load_transactions")
-@patch("builtins.input", side_effect=["1", "EXECUTED", "да", "по возрастанию", "нет", "нет"])
+@patch(
+    "builtins.input",
+    side_effect=["1", "EXECUTED", "да", "по возрастанию", "нет", "нет"],
+)
 @patch("pathlib.Path.exists", return_value=True)
-def test_sort_ascending(mock_exists, mock_input, mock_load, mock_sort, sample_operations):
+def test_sort_ascending(
+    mock_exists, mock_input, mock_load, mock_sort, sample_operations
+):
     mock_load.return_value = sample_operations
     mock_sort.return_value = sample_operations
     main()
@@ -114,7 +130,9 @@ def test_sort_ascending(mock_exists, mock_input, mock_load, mock_sort, sample_op
 @patch("src.main.load_transactions")
 @patch("builtins.input", side_effect=["1", "EXECUTED", "нет", "да", "нет"])
 @patch("pathlib.Path.exists", return_value=True)
-def test_only_rub(mock_exists, mock_input, mock_load, mock_filter, sample_operations, capsys):
+def test_only_rub(
+    mock_exists, mock_input, mock_load, mock_filter, sample_operations, capsys
+):
     mock_load.return_value = sample_operations
     # Возвращаем генератор, как в реальной функции
     mock_filter.return_value = iter([sample_operations[0]])
@@ -131,7 +149,9 @@ def test_only_rub(mock_exists, mock_input, mock_load, mock_filter, sample_operat
 @patch("src.main.load_transactions")
 @patch("builtins.input", side_effect=["1", "EXECUTED", "нет", "нет", "да", "Перевод"])
 @patch("pathlib.Path.exists", return_value=True)
-def test_search_by_word(mock_exists, mock_input, mock_load, mock_search, sample_operations):
+def test_search_by_word(
+    mock_exists, mock_input, mock_load, mock_search, sample_operations
+):
     mock_load.return_value = sample_operations
     mock_search.return_value = [sample_operations[0]]
     main()
@@ -144,7 +164,9 @@ def test_search_by_word(mock_exists, mock_input, mock_load, mock_search, sample_
 @patch("src.main.load_transactions")
 @patch("builtins.input", side_effect=["1", "EXECUTED", "нет", "нет", "да", "НетТакого"])
 @patch("pathlib.Path.exists", return_value=True)
-def test_empty_result(mock_exists, mock_input, mock_load, mock_search, sample_operations, capsys):
+def test_empty_result(
+    mock_exists, mock_input, mock_load, mock_search, sample_operations, capsys
+):
     mock_load.return_value = sample_operations
     main()
     out = capsys.readouterr().out

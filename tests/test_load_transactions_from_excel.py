@@ -1,5 +1,5 @@
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 import pandas as pd
 import pytest
@@ -37,13 +37,21 @@ class TestLoadTransactionsExcel:
         assert result[1]["state"] == "PENDING"
 
     @patch("src.load_transactions_from_excel.pd.read_excel")
-    def test_load_transactions_excel_calls_read_excel_with_correct_args(self, mock_read_excel):
+    def test_load_transactions_excel_calls_read_excel_with_correct_args(
+        self, mock_read_excel
+    ):
         """Проверяет, что pd.read_excel вызывается с правильными аргументами."""
         mock_read_excel.return_value = pd.DataFrame(
             columns=[
-                "id", "state", "date", "amount",
-                "currency_name", "currency_code",
-                "from", "to", "description",
+                "id",
+                "state",
+                "date",
+                "amount",
+                "currency_name",
+                "currency_code",
+                "from",
+                "to",
+                "description",
             ]
         )
 
@@ -53,9 +61,15 @@ class TestLoadTransactionsExcel:
         mock_read_excel.assert_called_once_with(
             test_path,
             names=[
-                "id", "state", "date", "amount",
-                "currency_name", "currency_code",
-                "from", "to", "description",
+                "id",
+                "state",
+                "date",
+                "amount",
+                "currency_name",
+                "currency_code",
+                "from",
+                "to",
+                "description",
             ],
             header=0,
         )
@@ -88,9 +102,15 @@ class TestLoadTransactionsExcel:
         """Проверяет поведение при пустом файле (только заголовки)."""
         mock_read_excel.return_value = pd.DataFrame(
             columns=[
-                "id", "state", "date", "amount",
-                "currency_name", "currency_code",
-                "from", "to", "description",
+                "id",
+                "state",
+                "date",
+                "amount",
+                "currency_name",
+                "currency_code",
+                "from",
+                "to",
+                "description",
             ]
         )
 
@@ -111,9 +131,15 @@ class TestLoadTransactionsExcel:
         """Проверяет, что Path передаётся в pd.read_excel как есть."""
         mock_read_excel.return_value = pd.DataFrame(
             columns=[
-                "id", "state", "date", "amount",
-                "currency_name", "currency_code",
-                "from", "to", "description",
+                "id",
+                "state",
+                "date",
+                "amount",
+                "currency_name",
+                "currency_code",
+                "from",
+                "to",
+                "description",
             ]
         )
 

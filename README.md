@@ -54,6 +54,8 @@ X — цифра номера карты. Генератор может сген
 ## Функция load_transactions_from_csv и load_transactions_from_excel
 Функции считывают финансовые операции из CSV и EXCEL соответственно.
 
+## Функция main
+cвязывает функциональности между собой.
 
 ## 🚀 Быстрый старт (Installation & Run)
 
@@ -77,5 +79,6 @@ external_api.py
 utils.py
 load_transactions_from_csv.py
 load_transactions_from_excel.py
+main
 
 в папке tests содержатся модули для тестирования проекта

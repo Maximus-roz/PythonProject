@@ -46,6 +46,7 @@ def test_log_to_console_error_with_kwargs(capsys):
         == "divide error: ZeroDivisionError. Inputs: (), {'x': 5, 'y': 0}\n"
     )
 
+
 def test_log_to_file_success(tmp_path):
     """Успешное выполнение функции логируется в файл."""
     log_file = tmp_path / "mylog.txt"
@@ -57,6 +58,7 @@ def test_log_to_file_success(tmp_path):
     my_function(1, 2)
 
     assert log_file.read_text(encoding="utf-8") == "my_function ok\n"
+
 
 def test_log_to_file_error(tmp_path):
     """Ошибка логируется в файл."""
@@ -72,6 +74,7 @@ def test_log_to_file_error(tmp_path):
     content = log_file.read_text(encoding="utf-8")
     assert content == "divide error: ZeroDivisionError. Inputs: (1, 0), {}\n"
 
+
 def test_log_to_file_appends(tmp_path):
     """Логи дописываются, а не перезаписывают файл."""
     log_file = tmp_path / "mylog.txt"
@@ -85,6 +88,7 @@ def test_log_to_file_appends(tmp_path):
 
     content = log_file.read_text(encoding="utf-8")
     assert content == "my_function ok\nmy_function ok\n"
+
 
 def test_log_to_file_no_console_output(tmp_path, capsys):
     """При указании filename в консоль ничего не выводится."""

@@ -1,21 +1,26 @@
 import json
-
 from pathlib import Path
 from typing import Counter
 
-from src.utils import load_transactions
 from src.generators import transaction_descriptions
+from src.utils import load_transactions
 
-def process_bank_operations(operations:list[dict], transaction_descriptions_list:list)->dict:
+
+def process_bank_operations(
+    operations: list[dict], transaction_descriptions_list: list
+) -> dict:
     """Возвращает словарь, в котором ключи — это названия категорий,
-    а значения — это количество операций в каждой категории. """
+    а значения — это количество операций в каждой категории."""
     descriptions = [op.get("description") for op in operations]
     # Counter посчитает частоту каждого значения
     counter = Counter(descriptions)
     # Оставляем только нужные категории, сохраняя их порядок и
     # включая категории с нулевым количеством
-    result = {category: counter.get(category, 0) for category in transaction_descriptions_list}
+    result = {
+        category: counter.get(category, 0) for category in transaction_descriptions_list
+    }
     return result
+
 
 if __name__ == "__main__":
     file_path = Path(__file__).resolve().parent.parent

@@ -41,7 +41,6 @@ def card_number_generator(start, end):
         yield formatted
 
 
-
 if __name__ == "__main__":
     path = Path(__file__).parent.parent / "transactions.txt"
     with path.open("r", encoding="utf-8") as file:
@@ -52,6 +51,3 @@ if __name__ == "__main__":
     result_descriptions = list(transaction_descriptions(transactions))
     print(result)
     print(result_descriptions)
-
-
-
