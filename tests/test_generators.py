@@ -1,6 +1,3 @@
-import json
-from pathlib import Path
-
 import pytest
 
 from src.generators import (
@@ -8,25 +5,6 @@ from src.generators import (
     filter_by_currency,
     transaction_descriptions,
 )
-
-
-@pytest.mark.parametrize(
-    "currency, expected_ids",
-    [
-        ("USD", [939719570, 142264268, 895315941]),
-        ("RUB", [873106923, 594226727]),
-        ("EUR", []),
-        ("", []),
-    ],
-)
-def test_filter_by_currency_parametrized(transactions, currency, expected_ids):
-    result = list(filter_by_currency(transactions, currency))
-    assert [tx["id"] for tx in result] == expected_ids
-
-
-path = Path(__file__).parent.parent / "transactions.txt"
-with path.open("r", encoding="utf-8") as file:
-    transactions = json.load(file)
 
 
 @pytest.fixture
@@ -93,6 +71,20 @@ def transactions():
             "to": "Счет 14211924144426031657",
         },
     ]
+
+
+@pytest.mark.parametrize(
+    "currency, expected_ids",
+    [
+        ("USD", [939719570, 142264268, 895315941]),
+        ("RUB", [873106923, 594226727]),
+        ("EUR", []),
+        ("", []),
+    ],
+)
+def test_filter_by_currency_parametrized(transactions, currency, expected_ids):
+    result = list(filter_by_currency(transactions, currency))
+    assert [tx["id"] for tx in result] == expected_ids
 
 
 def test_transaction_descriptions_returns_all_descriptions(transactions):
