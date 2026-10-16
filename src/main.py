@@ -163,10 +163,6 @@ def main():
                             or op.get("currency")
                             or ""
                     )
-                # # 4. Сумма и валюта
-                # amount_info = op.get("operationAmount", {})
-                # amount = amount_info.get("amount", op.get("amount", ""))
-                # currency = amount_info.get("currency", {}).get("name", op.get("currency", ""))
 
                 # 5. Печать виджета
                 print(f"{date_str} {description}")

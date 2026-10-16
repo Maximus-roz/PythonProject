@@ -37,11 +37,6 @@ def mask_account_card(account_number=""):
     account_number = str(account_number).strip()
     if not account_number:
         return "—"
-    # if not account_number:  # Проверка на пустую строку
-    #     raise ValueError("Аргумент не передан")
-    #     return "Аргумент не передан"
-
-
 
     account_number_spl = account_number.split()
     account_number_int = None
