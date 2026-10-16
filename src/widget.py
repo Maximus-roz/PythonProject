@@ -29,9 +29,20 @@ def mask_account_card(account_number=""):
         >>> mask_account_card("Счет 73654108430135874305")
         'Счет **4305'
     """
-    if not account_number:  # Проверка на пустую строку
-        raise ValueError("Аргумент не передан")
-        return "Аргумент не передан"
+    if account_number is None:
+        return "—"
+        # отсекаем NaN и приводим к строке
+    if isinstance(account_number, float) and account_number != account_number:
+        return "—"
+    account_number = str(account_number).strip()
+    if not account_number:
+        return "—"
+    # if not account_number:  # Проверка на пустую строку
+    #     raise ValueError("Аргумент не передан")
+    #     return "Аргумент не передан"
+
+
+
     account_number_spl = account_number.split()
     account_number_int = None
     account_number_str = []

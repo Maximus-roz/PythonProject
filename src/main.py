@@ -146,10 +146,27 @@ def main():
                 from_op = mask_account_card(from_raw) if from_raw else "—"
                 to_op = mask_account_card(to_raw) if to_raw else "—"
 
-                # 4. Сумма и валюта
-                amount_info = op.get("operationAmount", {})
-                amount = amount_info.get("amount", op.get("amount", ""))
-                currency = amount_info.get("currency", {}).get("name", op.get("currency", ""))
+                # 4. Сумма и валюта — с поддержкой JSON, CSV и Excel
+                amount_info = op.get("operationAmount")
+
+                if isinstance(amount_info, dict) and amount_info:
+                    # JSON-формат
+                    amount = amount_info.get("amount", "")
+                    currency = amount_info.get("currency", {}).get("name", "")
+                else:
+                    # CSV / Excel — плоские поля
+                    amount = op.get("amount", "")
+                    # приоритет: currency_name -> currency_code -> currency
+                    currency = (
+                            op.get("currency_name")
+                            or op.get("currency_code")
+                            or op.get("currency")
+                            or ""
+                    )
+                # # 4. Сумма и валюта
+                # amount_info = op.get("operationAmount", {})
+                # amount = amount_info.get("amount", op.get("amount", ""))
+                # currency = amount_info.get("currency", {}).get("name", op.get("currency", ""))
 
                 # 5. Печать виджета
                 print(f"{date_str} {description}")
@@ -161,4 +178,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-# нужно реализовать вывод в терминал виджетов транзакций, а не словарей транзакций.
