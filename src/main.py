@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 from pathlib import Path
 
@@ -7,6 +8,7 @@ from src.process_search import process_bank_search
 from src.processing import sort_by_date, filter_by_state
 from src.utils import load_transactions
 from src.generators import filter_by_currency
+from src.widget import mask_account_card
 
 
 def main():
@@ -121,12 +123,42 @@ def main():
                 "подходящей под ваши условия фильтрации"
             )
         else:
-            print(f"Всего банковских операций в выборке: {len(result)}")
-            for op in result:
-                print(json.dumps(op, ensure_ascii=False, indent=2))
+            print(f"Всего банковских операций в выборке: {len(result)}\n")
 
+            for op in result:
+                # 1. Дата: из ISO-строки -> ДД.ММ.ГГГГ
+                raw_date = op.get("date", "")
+                try:
+                    date_obj = datetime.fromisoformat(raw_date)
+                    date_str = date_obj.strftime("%d.%m.%Y")
+                except (ValueError, TypeError):
+                    date_str = raw_date  # если формат другой (CSV/Excel)
+
+                # 2. Описание
+                description = op.get("description", "")
+
+                # 3. Откуда / куда — поддерживаем разные ключи
+                from_raw = op.get("from") or op.get("from_account") or ""
+                to_raw = op.get("to") or op.get("to_account") or ""
+
+                # если в CSV/Excel это просто номер счета/карты — оборачиваем
+                # (подправьте под фактическую структуру ваших загрузчиков)
+                from_op = mask_account_card(from_raw) if from_raw else "—"
+                to_op = mask_account_card(to_raw) if to_raw else "—"
+
+                # 4. Сумма и валюта
+                amount_info = op.get("operationAmount", {})
+                amount = amount_info.get("amount", op.get("amount", ""))
+                currency = amount_info.get("currency", {}).get("name", op.get("currency", ""))
+
+                # 5. Печать виджета
+                print(f"{date_str} {description}")
+                print(f"{from_op} -> {to_op}")
+                print(f"{amount} {currency}\n")
         break
 
 
 if __name__ == "__main__":
     main()
+
+# нужно реализовать вывод в терминал виджетов транзакций, а не словарей транзакций.
