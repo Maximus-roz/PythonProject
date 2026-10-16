@@ -9,12 +9,12 @@ from src.external_api import convert_to_rub
 LOG_DIR = Path(__file__).resolve().parent.parent / "logs"
 LOG_DIR.mkdir(exist_ok=True)
 
-logger = logging.getLogger("masks")
+logger = logging.getLogger("utils")
 logger.setLevel(logging.DEBUG)
 
 # Чтобы не добавлять хендлеры повторно при повторном импорте
 if not logger.handlers:
-    file_handler = logging.FileHandler(LOG_DIR / "masks.log", encoding="utf-8")
+    file_handler = logging.FileHandler(LOG_DIR / "utils.log", encoding="utf-8")
     formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
@@ -69,7 +69,11 @@ def get_transaction_amount(transaction: dict[str, Any]) -> float:
     :param transaction: словарь с данными о транзакции
     :return: сумма транзакции в рублях (float)
     """
-    logger.info("Начало обработки транзакции: %s", transaction)
+    logger.info(
+        "Начало обработки транзакции: id=%s, date=%s, state=%s",
+        transaction.get("id"),
+        transaction.get("date"),
+        transaction.get("state"))
 
     if not isinstance(transaction, dict):
         logger.error(
