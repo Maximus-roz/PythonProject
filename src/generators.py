@@ -1,14 +1,9 @@
+import json
 from pathlib import Path
-import pandas as pd
 
 
 def filter_by_currency(transactions, currency):
-    """Фильтрует транзакции по коду валюты.
-
-     :param transactions: DataFrame с транзакциями.
-    :param currency: Код валюты для фильтрации (например, "USD", "RUB").
-    :return: DataFrame с отфильтрованными транзакциями.
-    """
+    """Фильтрует транзакции по коду валюты."""
 
     for x in transactions:
         if x["operationAmount"]["currency"]["code"] == currency:
@@ -26,6 +21,7 @@ def transaction_descriptions(transactions):
     """
 
     for x in transactions:
+
         yield x.get("description", "")
 
 
@@ -46,30 +42,12 @@ def card_number_generator(start, end):
 
 
 if __name__ == "__main__":
-    path = Path(__file__).parent.parent / "data" / "transactions.csv"
-    currency = "USD"
-    df = pd.read_csv(
-        path,
-        sep=";",
-        names=[
-            "id",
-            "state",
-            "date",
-            "amount",
-            "currency_name",
-            "currency_code",
-            "from",
-            "to",
-            "description",
-        ],
-        header=0,
-    ).dropna(how="all")
-    result = filter_by_currency(df, currency)
-    print(result)
+    path = Path(__file__).parent.parent / "transactions.txt"
+    with path.open("r", encoding="utf-8") as file:
+        transactions = json.load(file)
 
-    # result = get_survived(df)
-    # print(result)
-# if __name__ == "__main__":
-#     path = Path(__file__).parent.parent / "transactions.txt"
-#     with path.open("r", encoding="utf-8") as file:
-#         transactions = json.load(file)
+    currency = "USD"
+    result = list(filter_by_currency(transactions, currency))
+    result_descriptions = list(transaction_descriptions(transactions))
+    print(result)
+    print(result_descriptions)

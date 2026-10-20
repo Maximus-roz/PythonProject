@@ -3,7 +3,7 @@ from pathlib import Path
 import pandas as pd
 
 
-def load_transactions(path: Path) -> list[dict]:
+def load_transactions_excel(path: Path) -> list[dict]:
     df = pd.read_excel(
         path,
         names=[
@@ -24,4 +24,4 @@ def load_transactions(path: Path) -> list[dict]:
 
 if __name__ == "__main__":
     path = Path(__file__).parent.parent / "data" / "transactions_excel.xlsx"
-    print(load_transactions(path))
+    print(load_transactions_excel(path))
