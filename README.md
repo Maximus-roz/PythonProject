@@ -1,0 +1,84 @@
+# Домашнее задание
+<!-- Обычно пишется как заголовок H1 -->
+
+## О проекте (Description)
+
+## Функция filter_by_state 
+Функция возвращает новый список словарей, содержащий только те словари, у которых ключ 
+state соответствует указанному значению.
+
+## Функция sort_by_date 
+Функция возвращает новый список, отсортированный по дате (date).
+
+Примеры работы функции filter_by_state
+Выход функции со статусом по умолчанию 'EXECUTED'
+[{'id': 414288290, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364'}, 
+ {'id': 939719570, 'state': 'EXECUTED', 'date': '2018-06-30T02:08:58.425572'}]
+Выход функции, если вторым аргументом передано 'CANCELED'
+[{'id': 594226727, 'state': 'CANCELED', 'date': '2018-09-12T21:27:25.241689'}, 
+ {'id': 615064591, 'state': 'CANCELED', 'date': '2018-10-14T08:21:33.419441'}]
+Примеры работы функции sort_by_date
+Выход функции (сортировка по убыванию, т. е. сначала самые последние операции)
+[{'id': 41428829, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364'}, {'id': 615064591, 'state': 'CANCELED', 'date': '2018-10-14T08:21:33.419441'}, {'id': 594226727, 'state': 'CANCELED', 'date': '2018-09-12T21:27:25.241689'}, {'id': 939719570, 'state': 'EXECUTED', 'date': '2018-06-30T02:08:58.425572'}]
+
+## Функция filter_by_currency 
+возвращает итератор, который поочередно выдает транзакции, где валюта операции соответствует заданной (например, USD).
+Пример использования функции
+usd_transactions = filter_by_currency(transactions, "USD")
+for _ in range(2):
+    print(next(usd_transactions))
+
+## Генератор transaction_descriptions 
+возвращает описание каждой операции по очереди.
+Пример использования функции
+descriptions = transaction_descriptions(transactions)
+for _ in range(5):
+    print(next(descriptions))
+
+## Генератор card_number_generator 
+выдает номера банковских карт в формате XXXX XXXX XXXX XXXX, где 
+X — цифра номера карты. Генератор может сгенерировать номера карт в заданном диапазоне от 0000 0000 0000 0001 до 9999 9999 9999 9999.
+
+## Декоратор log 
+автоматически логирует начало и конец выполнения функции, а также ее результаты или возникшие ошибки.
+
+## Функция load_transactions
+загружает список транзакций из JSON-файла.
+
+## Функция transaction_amount
+возвращает сумму транзакции в рублях.
+
+## Функция convert_to_rub
+конвертирует сумму из указанной валюты в рубли
+
+## Функция load_transactions_from_csv и load_transactions_from_excel
+Функции считывают финансовые операции из CSV и EXCEL соответственно.
+
+## Функция main
+cвязывает функциональности между собой.
+
+## 🚀 Быстрый старт (Installation & Run)
+
+### Требования
+- Python 3.8+ 
+
+### Установка
+
+git clone https://github.com/Maximus-roz/PythonProject.git
+cd src
+pip install -r requirements.txt
+
+Модули в папке src
+processing.py
+masks.py
+processing.py
+widget.py
+generators.py
+decorators.py
+external_api.py
+utils.py
+load_transactions_from_csv.py
+load_transactions_from_excel.py
+main
+
+в папке tests содержатся модули для тестирования проекта

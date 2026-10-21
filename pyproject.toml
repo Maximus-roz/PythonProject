@@ -1,0 +1,29 @@
+[project]
+name = "coursework1"
+version = "0.1.0"
+description = ""
+authors = [
+    { name = "Maksim Belik", email = "rozysknik@mail.ru" }
+]
+# ВНИМАНИЕ: 3.14 ещё не выпущен. Если нужно — замените на ">=3.10,<4.0" или "^3.10"
+requires-python = ">=3.10,<4.0"
+dependencies = [
+    "pandas (>=2.2,<3.0)",
+    "openpyxl (>=3.1.5,<4.0.0)",
+    "requests (>=2.34,<3.0.0)",
+    "yfinance (>=1.7.0,<2.0.0)",
+    "pytest (>=9.1.1,<10.0.0)"
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+# --- Poetry: где искать пакеты (src-layout) ---
+[tool.poetry]
+packages = [{ include = "*", from = "src" }]
+
+# --- pytest: добавляем src/ в sys.path, чтобы `import load_transactions_from_excel` работал ---
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
